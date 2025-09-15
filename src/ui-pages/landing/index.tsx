@@ -5,10 +5,10 @@ import { FeaturesSection } from '@/components/landing-components/FeaturesSection
 import Footer from '@/components/common/Footer'
 
 const socialLinks = [
-  { label: 'Instagram', href: '#' },
-  { label: 'Twitter', href: '#' },
-  { label: 'Behance', href: '#' },
-  { label: 'Contact', href: '#' }
+  { label: 'Instagram', href: '#1' },
+  { label: 'Twitter', href: '#2' },
+  { label: 'Behance', href: '#3' },
+  { label: 'Contact', href: '#4' }
 ]
 
 export default function Landing() {

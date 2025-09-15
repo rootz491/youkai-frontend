@@ -35,7 +35,7 @@ export function HeroSection({
           {title}
         </Heading>
         
-        <div className="mb-8">
+        <div className="mb-8 mx-auto">
           <Text className="text-xl md:text-2xl leading-relaxed">
             {subtitle}
             <br />
