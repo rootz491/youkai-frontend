@@ -1,10 +1,26 @@
 import { client, urlFor } from '@/lib/sanity'
 import { Sketch } from '@/types/sketch'
 
-// Sanity query for paginated sketches
-const getPaginatedSketchesQuery = (lastCreatedAt?: string, limit = 12) => {
-  const dateFilter = lastCreatedAt ? ` && createdAt < "${lastCreatedAt}"` : ''
-  return `*[_type == "sketch"${dateFilter}] | order(createdAt desc)[0...${limit}] {
+// Configuration - easily changeable pagination limit
+const PAGINATION_LIMIT = 10;
+
+// Sanity query for initial sketches (no pagination)
+const getInitialSketchesQuery = (limit = PAGINATION_LIMIT) => {
+  return `*[_type == "sketch"] | order(_id) [0...${limit}] {
+    _id,
+    title,
+    description,
+    images,
+    tags,
+    createdAt,
+    featured,
+    slug
+  }`
+}
+
+// Sanity query for paginated sketches using _id
+const getPaginatedSketchesQuery = (lastId: string, limit = PAGINATION_LIMIT) => {
+  return `*[_type == "sketch" && _id > $lastId] | order(_id) [0...${limit}] {
     _id,
     title,
     description,
@@ -36,7 +52,7 @@ export interface GalleryDataResponse {
  */
 export async function fetchInitialGalleryData(): Promise<GalleryDataResponse> {
   try {
-    const data = await client.fetch(getPaginatedSketchesQuery())
+    const data = await client.fetch(getInitialSketchesQuery())
     
     if (data && data.length > 0) {
       const masonryItems = convertSketchesToMasonryItems(data, 'initial')
@@ -44,7 +60,7 @@ export async function fetchInitialGalleryData(): Promise<GalleryDataResponse> {
       return {
         sketches: data,
         masonryItems,
-        hasMore: data.length === 12
+        hasMore: data.length === PAGINATION_LIMIT
       }
     } else {
       return {
@@ -71,7 +87,7 @@ export async function fetchMoreGalleryData(
     }
 
     const lastSketch = existingSketches[existingSketches.length - 1]
-    const newData = await client.fetch(getPaginatedSketchesQuery(lastSketch.createdAt))
+    const newData = await client.fetch(getPaginatedSketchesQuery(lastSketch._id), { lastId: lastSketch._id })
     
     if (newData && newData.length > 0) {
       // Filter out any sketches that already exist to prevent duplicates
@@ -84,7 +100,7 @@ export async function fetchMoreGalleryData(
         return {
           sketches: uniqueNewData,
           masonryItems: newMasonryItems,
-          hasMore: newData.length === 12
+          hasMore: newData.length === PAGINATION_LIMIT
         }
       } else {
         // No new unique items found
@@ -140,12 +156,12 @@ export async function getSketchCount(): Promise<number> {
 /**
  * Search sketches by title or tags
  */
-export async function searchSketches(query: string, limit = 12): Promise<Sketch[]> {
+export async function searchSketches(query: string, limit = PAGINATION_LIMIT): Promise<Sketch[]> {
   try {
     const searchQuery = `*[_type == "sketch" && (
       title match "${query}*" || 
       tags[] match "${query}*"
-    )] | order(createdAt desc)[0...${limit}] {
+    )] | order(_id)[0...${limit}] {
       _id,
       title,
       description,

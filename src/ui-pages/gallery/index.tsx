@@ -48,12 +48,12 @@ export default function GalleryPage() {
   const loadMoreData = useCallback(async () => {
     const currentState = stateRef.current
     if (currentState.loadingMore || !currentState.hasMore || currentState.sketches.length === 0) return
-
+    
     try {
       setLoadingMore(true)
-
+      
       const result = await fetchMoreGalleryData(currentState.sketches)
-
+      
       if (result.sketches.length > 0) {
         setSketches(prev => [...prev, ...result.sketches])
         setAllItems(prev => [...prev, ...result.masonryItems])
@@ -61,6 +61,7 @@ export default function GalleryPage() {
       } else {
         setHasMore(false)
       }
+      
     } catch (err) {
       console.error('Failed to load more data:', err)
     } finally {
@@ -80,7 +81,8 @@ export default function GalleryPage() {
       timeoutId = setTimeout(() => {
         const currentState = stateRef.current
         if (window.innerHeight + document.documentElement.scrollTop >= 
-            document.documentElement.offsetHeight - 1000 && !currentState.loadingMore) {
+            document.documentElement.offsetHeight - 1000 && 
+            !currentState.loadingMore && currentState.hasMore && currentState.sketches.length > 0) {
           loadMoreData()
         }
       }, 100)
@@ -95,7 +97,7 @@ export default function GalleryPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
         <div className="container mx-auto px-4 py-8">
           <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8">
             ← Back to Home
@@ -113,7 +115,7 @@ export default function GalleryPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
         <div className="container mx-auto px-4 py-8">
           <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8">
             ← Back to Home
@@ -137,7 +139,7 @@ export default function GalleryPage() {
 
   if (allItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
         <div className="container mx-auto px-4 py-8">
           <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8">
             ← Back to Home
@@ -163,8 +165,8 @@ export default function GalleryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-8">
+    <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+      <div className="container mx-auto px-4 py-8 pb-20">
         <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8 transition-colors">
           ← Back to Home
         </Link>
@@ -178,7 +180,7 @@ export default function GalleryPage() {
           </p>
         </div>
 
-        <div className="relative">
+        <div className="relative pb-12">
           <Masonry 
             items={allItems}
             ease="power3.out"
@@ -200,7 +202,7 @@ export default function GalleryPage() {
 
           {/* End of content indicator */}
           {!hasMore && allItems.length > 0 && (
-            <div className="text-center py-8">
+            <div className="text-center py-12">
               <p className="text-gray-500">🎨 You&apos;ve seen all the artworks!</p>
             </div>
           )}
