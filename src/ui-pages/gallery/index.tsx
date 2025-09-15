@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { 
   fetchInitialGalleryData, 
@@ -14,7 +14,7 @@ import { GalleryHeader, GalleryContent } from '@/components/gallery-components'
 import { SketchModal } from '@/components/gallery-components/SketchModal'
 import Footer from '@/components/common/Footer'
 
-export default function GalleryPage() {
+function GalleryPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const selectedSketch = searchParams.get('sketch')
@@ -212,5 +212,20 @@ export default function GalleryPage() {
         />
       )}
     </>
+  )
+}
+
+export default function GalleryPage() {
+  return (
+    <Suspense fallback={
+      <PageWrapper>
+        <Container>
+          <LoadingState message="Loading gallery..." />
+        </Container>
+        <Footer />
+      </PageWrapper>
+    }>
+      <GalleryPageContent />
+    </Suspense>
   )
 }
