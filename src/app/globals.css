@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -139,4 +140,9 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom font for Studio Youkai title */
+.studio-youkai-title {
+  font-family: 'Shadows Into Light', cursive;
 }

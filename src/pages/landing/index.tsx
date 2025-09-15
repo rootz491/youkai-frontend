@@ -9,7 +9,7 @@ export default function Landing() {
       {/* Hero Section */}
       <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4">
         <div className="text-center max-w-4xl mx-auto mb-16">
-          <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-6">
+          <h1 className="studio-youkai-title text-6xl md:text-8xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-6">
             Studio Youkai
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
@@ -40,7 +40,7 @@ export default function Landing() {
       {/* Footer */}
       <footer className="relative z-10 bg-gray-900 text-white py-12">
         <div className="max-w-4xl mx-auto text-center px-4">
-          <h3 className="text-2xl font-bold mb-4">Studio Youkai</h3>
+          <h3 className="studio-youkai-title text-2xl font-bold mb-4">Studio Youkai</h3>
           <p className="text-gray-400 mb-6">
             Creating art that speaks to the soul. Every sketch tells a story, every illustration captures a moment.
           </p>
