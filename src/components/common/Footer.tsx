@@ -17,7 +17,7 @@ interface FooterProps {
 const defaultLinks: FooterLink[] = [
   { label: 'Home', href: '/' },
   { label: 'Gallery', href: '/gallery' },
-  { label: 'About', href: '#' },
+  { label: 'About', href: '/about' },
   { label: 'Contact', href: '#' }
 ]
 

@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { HeroSection } from '@/components/landing-components/HeroSection'
 import { FeaturesSection } from '@/components/landing-components/FeaturesSection'
 import Footer from '@/components/common/Footer'
@@ -12,9 +13,10 @@ const socialLinks = [
 ]
 
 export default function Landing() {
+  const router = useRouter()
+  
   const handleAboutClick = () => {
-    // TODO: Navigate to about page or show about modal
-    console.log('About button clicked')
+    router.push('/about')
   }
 
   return (
