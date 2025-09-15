@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { client, urlFor } from '@/lib/sanity'
 import { Sketch } from '@/types/sketch'
 import Masonry from '@/components/Masonry'
@@ -36,6 +36,14 @@ export default function GalleryPage() {
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
 
+  // Use refs to access current state in scroll handler without causing re-renders
+  const stateRef = useRef({ loadingMore: false, hasMore: true, sketches: [] as Sketch[] })
+  
+  // Update refs when state changes
+  useEffect(() => {
+    stateRef.current = { loadingMore, hasMore, sketches }
+  }, [loadingMore, hasMore, sketches])
+
   const loadInitialData = useCallback(async () => {
     try {
       setLoading(true)
@@ -45,11 +53,11 @@ export default function GalleryPage() {
       setSketches(data || [])
       
       if (data && data.length > 0) {
-        // Convert sketches to masonry items
+        // Convert sketches to masonry items with unique IDs
         const masonryItems = data
           .filter((sketch: Sketch) => sketch.images && sketch.images.length > 0)
-          .map((sketch: Sketch) => ({
-            id: sketch._id,
+          .map((sketch: Sketch, index: number) => ({
+            id: `${sketch._id}-initial-${index}`, // Ensure unique IDs
             img: urlFor(sketch.images[0].asset).width(600).quality(80).url(),
             url: sketch.slug?.current ? `/sketch/${sketch.slug.current}` : '#',
             height: Math.floor(Math.random() * 200) + 350
@@ -73,30 +81,39 @@ export default function GalleryPage() {
   }, [])
 
   const loadMoreData = useCallback(async () => {
-    if (loadingMore || !hasMore || sketches.length === 0) return
+    const currentState = stateRef.current
+    if (currentState.loadingMore || !currentState.hasMore || currentState.sketches.length === 0) return
     
     try {
       setLoadingMore(true)
       
       // Load more real data
-      const lastSketch = sketches[sketches.length - 1]
+      const lastSketch = currentState.sketches[currentState.sketches.length - 1]
       const newData = await client.fetch(getPaginatedSketches(lastSketch.createdAt))
       
       if (newData && newData.length > 0) {
-        const newSketches = [...sketches, ...newData]
-        setSketches(newSketches)
+        // Filter out any sketches that already exist to prevent duplicates
+        const existingIds = new Set(currentState.sketches.map(sketch => sketch._id))
+        const uniqueNewData = newData.filter((sketch: Sketch) => !existingIds.has(sketch._id))
         
-        const newMasonryItems = newData
-          .filter((sketch: Sketch) => sketch.images && sketch.images.length > 0)
-          .map((sketch: Sketch) => ({
-            id: sketch._id,
-            img: urlFor(sketch.images[0].asset).width(600).quality(80).url(),
-            url: sketch.slug?.current ? `/sketch/${sketch.slug.current}` : '#',
-            height: Math.floor(Math.random() * 200) + 350
-          }))
-        
-        setAllItems(prev => [...prev, ...newMasonryItems])
-        setHasMore(newData.length === 12)
+        if (uniqueNewData.length > 0) {
+          setSketches(prev => [...prev, ...uniqueNewData])
+          
+          const newMasonryItems = uniqueNewData
+            .filter((sketch: Sketch) => sketch.images && sketch.images.length > 0)
+            .map((sketch: Sketch, index: number) => ({
+              id: `${sketch._id}-${Date.now()}-${index}`, // Ensure unique IDs
+              img: urlFor(sketch.images[0].asset).width(600).quality(80).url(),
+              url: sketch.slug?.current ? `/sketch/${sketch.slug.current}` : '#',
+              height: Math.floor(Math.random() * 200) + 350
+            }))
+          
+          setAllItems(prev => [...prev, ...newMasonryItems])
+          setHasMore(newData.length === 12)
+        } else {
+          // No new unique items found
+          setHasMore(false)
+        }
       } else {
         setHasMore(false)
       }
@@ -106,23 +123,33 @@ export default function GalleryPage() {
     } finally {
       setLoadingMore(false)
     }
-  }, [sketches, loadingMore, hasMore])
+  }, []) // Remove all dependencies to prevent useEffect array size changes
 
   useEffect(() => {
     loadInitialData()
   }, [loadInitialData])
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout
+
     const handleScroll = () => {
-      if (window.innerHeight + document.documentElement.scrollTop >= 
-          document.documentElement.offsetHeight - 1000) { // Load when 1000px from bottom
-        loadMoreData()
-      }
+      // Debounce scroll events to prevent multiple rapid calls
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => {
+        const currentState = stateRef.current
+        if (window.innerHeight + document.documentElement.scrollTop >= 
+            document.documentElement.offsetHeight - 1000 && !currentState.loadingMore) {
+          loadMoreData()
+        }
+      }, 100) // 100ms debounce
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [loadMoreData])
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      clearTimeout(timeoutId)
+    }
+  }, [loadMoreData]) // Only loadMoreData as dependency, which is now stable
 
   if (loading) {
     return (
