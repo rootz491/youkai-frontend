@@ -109,6 +109,18 @@ export default function GalleryPage() {
             </div>
           </div>
         </div>
+        
+        {/* Footer for loading state */}
+        <footer className="bg-gradient-to-r from-gray-100 to-gray-200 border-t border-gray-300 mt-16">
+          <div className="container mx-auto px-4 py-12">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Youkai Art Gallery</h3>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                Exploring creativity through digital art and sketches.
+              </p>
+            </div>
+          </div>
+        </footer>
       </div>
     )
   }
@@ -133,6 +145,18 @@ export default function GalleryPage() {
             </div>
           </div>
         </div>
+        
+        {/* Footer for error state */}
+        <footer className="bg-gradient-to-r from-gray-100 to-gray-200 border-t border-gray-300 mt-16">
+          <div className="container mx-auto px-4 py-12">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Youkai Art Gallery</h3>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                Exploring creativity through digital art and sketches.
+              </p>
+            </div>
+          </div>
+        </footer>
       </div>
     )
   }
@@ -160,13 +184,25 @@ export default function GalleryPage() {
             </div>
           </div>
         </div>
+        
+        {/* Footer for empty state */}
+        <footer className="bg-gradient-to-r from-gray-100 to-gray-200 border-t border-gray-300 mt-16">
+          <div className="container mx-auto px-4 py-12">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Youkai Art Gallery</h3>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                Exploring creativity through digital art and sketches.
+              </p>
+            </div>
+          </div>
+        </footer>
       </div>
     )
   }
 
   return (
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-      <div className="container mx-auto px-4 py-8 pb-20">
+      <div className="container mx-auto px-4 py-8">
         <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8 transition-colors">
           ← Back to Home
         </Link>
@@ -180,7 +216,7 @@ export default function GalleryPage() {
           </p>
         </div>
 
-        <div className="relative pb-12">
+        <div className="w-full">
           <Masonry 
             items={allItems}
             ease="power3.out"
@@ -200,14 +236,45 @@ export default function GalleryPage() {
             </div>
           )}
 
-          {/* End of content indicator */}
+          {/* End of content indicator - moved outside masonry container */}
           {!hasMore && allItems.length > 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">🎨 You&apos;ve seen all the artworks!</p>
+            <div className="text-center py-16">
+              <p className="text-gray-500 text-lg">🎨 You&apos;ve seen all the artworks!</p>
             </div>
           )}
         </div>
       </div>
+
+      {/* Footer - always at the bottom with proper spacing */}
+      <footer className="bg-gradient-to-r from-gray-100 to-gray-200 border-t border-gray-300 mt-16">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Youkai Art Gallery</h3>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              Exploring creativity through digital art and sketches. Each piece tells a unique story.
+            </p>
+            <div className="flex justify-center space-x-6 text-gray-500">
+              <Link href="/" className="hover:text-gray-800 transition-colors">
+                Home
+              </Link>
+              <Link href="/gallery" className="hover:text-gray-800 transition-colors">
+                Gallery
+              </Link>
+              <a href="#" className="hover:text-gray-800 transition-colors">
+                About
+              </a>
+              <a href="#" className="hover:text-gray-800 transition-colors">
+                Contact
+              </a>
+            </div>
+            <div className="mt-8 pt-8 border-t border-gray-300">
+              <p className="text-gray-500 text-sm">
+                © 2025 Youkai Art Gallery. All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
