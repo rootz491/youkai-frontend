@@ -30,13 +30,14 @@ export function HeroSection({
       <div className="text-center max-w-4xl mx-auto mb-16">
         <Heading 
           level={1} 
+          align="center"
           className="studio-youkai-title text-6xl md:text-8xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-6"
         >
           {title}
         </Heading>
         
         <div className="mb-8 mx-auto">
-          <Text className="text-xl md:text-2xl leading-relaxed">
+          <Text className="text-xl md:text-2xl leading-relaxed" align="center">
             {subtitle}
             <br />
             {description}

@@ -10,7 +10,7 @@ interface LinkButtonProps {
 }
 
 const variants = {
-  primary: 'text-gray-600 hover:text-gray-800',
+  primary: 'bg-black text-white hover:bg-gray-800 transition-colors duration-300',
   secondary: 'text-blue-600 hover:text-blue-800',
   ghost: 'text-gray-500 hover:text-gray-700'
 }

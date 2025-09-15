@@ -14,7 +14,7 @@ export default function GalleryHeader({
 }: GalleryHeaderProps) {
   return (
     <Container>
-      <LinkButton href={backHref} className="mb-8">
+      <LinkButton href={backHref} variant='ghost' className="mb-8">
         ← Back to Home
       </LinkButton>
 

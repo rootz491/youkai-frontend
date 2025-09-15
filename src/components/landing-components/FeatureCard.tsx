@@ -21,10 +21,10 @@ export function FeatureCard({
       className
     )}>
       <div className="text-4xl mb-4">{icon}</div>
-      <Heading level={3} className="text-xl mb-2">
+      <Heading level={3} align="center" className="text-xl mb-2">
         {title}
       </Heading>
-      <Text variant="muted">
+      <Text variant="muted" align="center">
         {description}
       </Text>
     </div>
