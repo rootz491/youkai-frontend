@@ -13,8 +13,9 @@ export default function Landing() {
             Studio Youkai
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-            Welcome to my artistic journey. Explore my collection of sketches and illustrations 
-            in this beautifully animated masonry gallery.
+            Welcome to my artistic journey. 
+            <br />
+            Explore my collection of sketches and illustrations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
