@@ -1,6 +1,6 @@
 'use client'
 
-import Gallery from '@/components/Gallery'
+import Link from 'next/link'
 
 export default function Landing() {
   return (
@@ -18,12 +18,12 @@ export default function Landing() {
             Explore my collection of sketches and illustrations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
-              className="px-8 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-300 text-lg font-medium"
+            <Link 
+              href="/gallery"
+              className="px-8 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-300 text-lg font-medium text-center"
             >
               Explore Gallery
-            </button>
+            </Link>
             <button className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-full hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 text-lg font-medium">
               About Me
             </button>
@@ -31,10 +31,33 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section id="gallery" className="relative z-10 py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <Gallery />
+      {/* Features Section */}
+      <section className="relative z-10 py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">What You&apos;ll Find</h2>
+            <p className="text-xl text-gray-600">Discover the art that speaks to your soul</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg">
+              <div className="text-4xl mb-4">🎨</div>
+              <h3 className="text-xl font-semibold mb-2">Original Sketches</h3>
+              <p className="text-gray-600">Hand-drawn artwork that captures moments and emotions</p>
+            </div>
+            
+            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg">
+              <div className="text-4xl mb-4">✨</div>
+              <h3 className="text-xl font-semibold mb-2">Digital Art</h3>
+              <p className="text-gray-600">Modern illustrations blending traditional and digital techniques</p>
+            </div>
+            
+            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg">
+              <div className="text-4xl mb-4">📚</div>
+              <h3 className="text-xl font-semibold mb-2">Story Illustrations</h3>
+              <p className="text-gray-600">Visual narratives that bring stories to life</p>
+            </div>
+          </div>
         </div>
       </section>
 
