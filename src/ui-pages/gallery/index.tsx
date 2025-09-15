@@ -1,14 +1,16 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import Link from 'next/link'
-import Masonry from '@/components/Masonry'
 import { 
   fetchInitialGalleryData, 
   fetchMoreGalleryData,
   type MasonryItem,
   type Sketch 
 } from '@/services/sanity'
+import { PageWrapper, Container } from '@/components/ui/Layout'
+import { LoadingState, ErrorState, EmptyState } from '@/components/ui/States'
+import { GalleryHeader, GalleryContent } from '@/components/gallery-components'
+import Footer from '@/components/common/Footer'
 
 export default function GalleryPage() {
   const [sketches, setSketches] = useState<Sketch[]>([])
@@ -97,184 +99,59 @@ export default function GalleryPage() {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-        <div className="container mx-auto px-4 py-8">
-          <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8">
-            ← Back to Home
-          </Link>
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center space-y-4">
-              <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
-              <p className="text-gray-600">Loading gallery...</p>
-            </div>
-          </div>
-        </div>
-        
-        {/* Footer for loading state */}
-        <footer className="bg-gradient-to-r from-gray-100 to-gray-200 border-t border-gray-300 mt-16">
-          <div className="container mx-auto px-4 py-12">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Youkai Art Gallery</h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                Exploring creativity through digital art and sketches.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
+      <PageWrapper>
+        <Container>
+          <GalleryHeader itemCount={0} />
+          <LoadingState message="Loading gallery..." />
+        </Container>
+        <Footer />
+      </PageWrapper>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-        <div className="container mx-auto px-4 py-8">
-          <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8">
-            ← Back to Home
-          </Link>
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center space-y-4">
-              <div className="text-red-500 text-4xl">⚠️</div>
-              <p className="text-red-600">{error}</p>
-              <button 
-                onClick={loadInitialData}
-                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-              >
-                Retry
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        {/* Footer for error state */}
-        <footer className="bg-gradient-to-r from-gray-100 to-gray-200 border-t border-gray-300 mt-16">
-          <div className="container mx-auto px-4 py-12">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Youkai Art Gallery</h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                Exploring creativity through digital art and sketches.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
+      <PageWrapper>
+        <Container>
+          <GalleryHeader itemCount={0} />
+          <ErrorState 
+            message={error}
+            onRetry={loadInitialData}
+          />
+        </Container>
+        <Footer />
+      </PageWrapper>
     )
   }
 
   if (allItems.length === 0) {
     return (
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-        <div className="container mx-auto px-4 py-8">
-          <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8">
-            ← Back to Home
-          </Link>
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center space-y-4">
-              <div className="text-6xl mb-4">🎨</div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">No Artworks Found</h2>
-              <p className="text-gray-600 max-w-md mx-auto">
-                The gallery is currently empty. Check back later for new artworks, or contact the artist to see their latest creations.
-              </p>
-              <button 
-                onClick={loadInitialData}
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mt-4"
-              >
-                Refresh Gallery
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        {/* Footer for empty state */}
-        <footer className="bg-gradient-to-r from-gray-100 to-gray-200 border-t border-gray-300 mt-16">
-          <div className="container mx-auto px-4 py-12">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Youkai Art Gallery</h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                Exploring creativity through digital art and sketches.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
+      <PageWrapper>
+        <Container>
+          <GalleryHeader itemCount={0} />
+          <EmptyState 
+            title="No Artworks Found"
+            message="The gallery is currently empty. Check back later for new artworks, or contact the artist to see their latest creations."
+            onAction={loadInitialData}
+            actionText="Refresh Gallery"
+            centered={true}
+          />
+        </Container>
+        <Footer />
+      </PageWrapper>
     )
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-8 transition-colors">
-          ← Back to Home
-        </Link>
-
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            Art Gallery
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Discover {allItems.length} unique artworks in our curated collection
-          </p>
-        </div>
-
-        <div className="w-full">
-          <Masonry 
-            items={allItems}
-            ease="power3.out"
-            duration={0.8}
-            stagger={0.08}
-            animateFrom="bottom"
-            scaleOnHover={true}
-            hoverScale={0.96}
-            blurToFocus={true}
-            colorShiftOnHover={false}
-          />
-
-          {/* Loading indicator for infinite scroll */}
-          {loadingMore && (
-            <div className="flex justify-center py-8">
-              <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin"></div>
-            </div>
-          )}
-
-          {/* End of content indicator - moved outside masonry container */}
-          {!hasMore && allItems.length > 0 && (
-            <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">🎨 You&apos;ve seen all the artworks!</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Footer - always at the bottom with proper spacing */}
-      <footer className="bg-gradient-to-r from-gray-100 to-gray-200 border-t border-gray-300 mt-16">
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Youkai Art Gallery</h3>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              Exploring creativity through digital art and sketches. Each piece tells a unique story.
-            </p>
-            <div className="flex justify-center space-x-6 text-gray-500">
-              <Link href="/" className="hover:text-gray-800 transition-colors">
-                Home
-              </Link>
-              <Link href="/gallery" className="hover:text-gray-800 transition-colors">
-                Gallery
-              </Link>
-              <a href="#" className="hover:text-gray-800 transition-colors">
-                About
-              </a>
-              <a href="#" className="hover:text-gray-800 transition-colors">
-                Contact
-              </a>
-            </div>
-            <div className="mt-8 pt-8 border-t border-gray-300">
-              <p className="text-gray-500 text-sm">
-                © 2025 Youkai Art Gallery. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+    <PageWrapper>
+      <GalleryHeader itemCount={allItems.length} />
+      <GalleryContent 
+        items={allItems}
+        loadingMore={loadingMore}
+        hasMore={hasMore}
+        showEndMessage={true}
+      />
+      <Footer />
+    </PageWrapper>
   )
 }
