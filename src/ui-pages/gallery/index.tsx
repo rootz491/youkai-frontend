@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { 
   fetchInitialGalleryData, 
   fetchMoreGalleryData,
@@ -10,9 +11,14 @@ import {
 import { PageWrapper, Container } from '@/components/ui/Layout'
 import { LoadingState, ErrorState, EmptyState } from '@/components/ui/States'
 import { GalleryHeader, GalleryContent } from '@/components/gallery-components'
+import { SketchModal } from '@/components/gallery-components/SketchModal'
 import Footer from '@/components/common/Footer'
 
 export default function GalleryPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const selectedSketch = searchParams.get('sketch')
+  
   const [sketches, setSketches] = useState<Sketch[]>([])
   const [allItems, setAllItems] = useState<MasonryItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -25,6 +31,18 @@ export default function GalleryPage() {
   useEffect(() => {
     stateRef.current = { loadingMore, hasMore, sketches }
   }, [loadingMore, hasMore, sketches])
+
+  const handleCloseModal = useCallback(() => {
+    router.push('/gallery')
+  }, [router])
+
+  const handleItemClick = useCallback((item: MasonryItem) => {
+    // Extract slug from the URL path (e.g., '/sketch/my-sketch' -> 'my-sketch')
+    const slug = item.url.split('/').pop()
+    if (slug) {
+      router.push(`/gallery?sketch=${slug}`)
+    }
+  }, [router])
 
   const loadInitialData = useCallback(async () => {
     try {
@@ -99,59 +117,100 @@ export default function GalleryPage() {
 
   if (loading) {
     return (
-      <PageWrapper>
-        <Container>
-          <GalleryHeader itemCount={0} />
-          <LoadingState message="Loading gallery..." />
-        </Container>
-        <Footer />
-      </PageWrapper>
+      <>
+        <PageWrapper>
+          <Container>
+            <GalleryHeader itemCount={0} />
+            <LoadingState message="Loading gallery..." />
+          </Container>
+          <Footer />
+        </PageWrapper>
+
+        {/* Sketch Modal */}
+        {selectedSketch && (
+          <SketchModal 
+            slug={selectedSketch}
+            onClose={handleCloseModal}
+          />
+        )}
+      </>
     )
   }
 
   if (error) {
     return (
-      <PageWrapper>
-        <Container>
-          <GalleryHeader itemCount={0} />
-          <ErrorState 
-            message={error}
-            onRetry={loadInitialData}
+      <>
+        <PageWrapper>
+          <Container>
+            <GalleryHeader itemCount={0} />
+            <ErrorState 
+              message={error}
+              onRetry={loadInitialData}
+            />
+          </Container>
+          <Footer />
+        </PageWrapper>
+
+        {/* Sketch Modal */}
+        {selectedSketch && (
+          <SketchModal 
+            slug={selectedSketch}
+            onClose={handleCloseModal}
           />
-        </Container>
-        <Footer />
-      </PageWrapper>
+        )}
+      </>
     )
   }
 
   if (allItems.length === 0) {
     return (
-      <PageWrapper>
-        <Container>
-          <GalleryHeader itemCount={0} />
-          <EmptyState 
-            title="No Artworks Found"
-            message="The gallery is currently empty. Check back later for new artworks, or contact the artist to see their latest creations."
-            onAction={loadInitialData}
-            actionText="Refresh Gallery"
-            centered={true}
+      <>
+        <PageWrapper>
+          <Container>
+            <GalleryHeader itemCount={0} />
+            <EmptyState 
+              title="No Artworks Found"
+              message="The gallery is currently empty. Check back later for new artworks, or contact the artist to see their latest creations."
+              onAction={loadInitialData}
+              actionText="Refresh Gallery"
+              centered={true}
+            />
+          </Container>
+          <Footer />
+        </PageWrapper>
+
+        {/* Sketch Modal */}
+        {selectedSketch && (
+          <SketchModal 
+            slug={selectedSketch}
+            onClose={handleCloseModal}
           />
-        </Container>
-        <Footer />
-      </PageWrapper>
+        )}
+      </>
     )
   }
 
   return (
-    <PageWrapper>
-      <GalleryHeader itemCount={allItems.length} />
-      <GalleryContent 
-        items={allItems}
-        loadingMore={loadingMore}
-        hasMore={hasMore}
-        showEndMessage={true}
-      />
-      <Footer />
-    </PageWrapper>
+    <>
+      <PageWrapper>
+        <GalleryHeader itemCount={allItems.length} />
+        <GalleryContent 
+          items={allItems}
+          loadingMore={loadingMore}
+          hasMore={hasMore}
+          showEndMessage={true}
+          onItemClick={handleItemClick}
+        />
+        <Footer />
+      </PageWrapper>
+
+      {/* Sketch Modal */}
+      {selectedSketch && (
+        <SketchModal 
+          slug={selectedSketch}
+          onClose={handleCloseModal}
+        />
+      )}
+    </>
   )
 }

@@ -48,9 +48,9 @@ export default function Footer({
           </Text>
           
           <div className="flex justify-center space-x-6 mb-8">
-            {links.map((link) => (
+            {links.map((link, index) => (
               <a 
-                key={link.href}
+                key={`${link.label}-${index}`}
                 href={link.href}
                 className="text-gray-400 hover:text-white transition-colors"
               >

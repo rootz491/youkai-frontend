@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 
 const useMedia = (queries: string[], values: number[], defaultValue: number): number => {
-  const get = () => values[queries.findIndex(q => matchMedia(q).matches)] ?? defaultValue;
+  const get = useCallback(() => values[queries.findIndex(q => matchMedia(q).matches)] ?? defaultValue, [queries, values, defaultValue]);
 
   const [value, setValue] = useState<number>(get);
 
@@ -12,7 +12,7 @@ const useMedia = (queries: string[], values: number[], defaultValue: number): nu
     const handler = () => setValue(get);
     queries.forEach(q => matchMedia(q).addEventListener('change', handler));
     return () => queries.forEach(q => matchMedia(q).removeEventListener('change', handler));
-  }, [queries]);
+  }, [queries, get]);
 
   return value;
 };
@@ -71,6 +71,7 @@ interface MasonryProps {
   hoverScale?: number;
   blurToFocus?: boolean;
   colorShiftOnHover?: boolean;
+  onItemClick?: (item: Item) => void;
 }
 
 const Masonry: React.FC<MasonryProps> = ({
@@ -82,7 +83,8 @@ const Masonry: React.FC<MasonryProps> = ({
   scaleOnHover = true,
   hoverScale = 0.95,
   blurToFocus = true,
-  colorShiftOnHover = false
+  colorShiftOnHover = false,
+  onItemClick
 }) => {
   const columns = useMedia(
     ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'],
@@ -93,7 +95,7 @@ const Masonry: React.FC<MasonryProps> = ({
   const [containerRef, { width }] = useMeasure<HTMLDivElement>();
   const [imagesReady, setImagesReady] = useState(false);
 
-  const getInitialPosition = (item: GridItem) => {
+  const getInitialPosition = useCallback((item: GridItem) => {
     const containerRect = containerRef.current?.getBoundingClientRect();
     if (!containerRect) return { x: item.x, y: item.y };
 
@@ -120,7 +122,7 @@ const Masonry: React.FC<MasonryProps> = ({
       default:
         return { x: item.x, y: item.y + 100 };
     }
-  };
+  }, [animateFrom, containerRef]);
 
   useEffect(() => {
     preloadImages(items.map(i => i.img)).then(() => setImagesReady(true));
@@ -190,7 +192,7 @@ const Masonry: React.FC<MasonryProps> = ({
     });
 
     hasMounted.current = true;
-  }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease]);
+  }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease, getInitialPosition]);
 
   const handleMouseEnter = (id: string, element: HTMLElement) => {
     if (scaleOnHover) {
@@ -232,7 +234,7 @@ const Masonry: React.FC<MasonryProps> = ({
           data-key={item.id}
           className="absolute box-content"
           style={{ willChange: 'transform, width, height, opacity' }}
-          onClick={() => window.open(item.url, '_blank', 'noopener')}
+          onClick={() => onItemClick?.(item)}
           onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
           onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
         >

@@ -9,20 +9,22 @@ interface GalleryContentProps {
   loadingMore: boolean
   hasMore: boolean
   showEndMessage: boolean
+  onItemClick?: (item: MasonryItem) => void
 }
 
 export default function GalleryContent({ 
   items, 
   loadingMore, 
   hasMore, 
-  showEndMessage 
+  showEndMessage,
+  onItemClick
 }: GalleryContentProps) {
   return (
     <Container>
       <div className="w-full">
         <Masonry 
           items={items}
-          ease="power3.out"
+          ease="power2.out" // or "power3.out"
           duration={0.8}
           stagger={0.08}
           animateFrom="bottom"
@@ -30,6 +32,7 @@ export default function GalleryContent({
           hoverScale={0.96}
           blurToFocus={true}
           colorShiftOnHover={false}
+          onItemClick={onItemClick}
         />
 
         {/* Loading indicator for infinite scroll */}
