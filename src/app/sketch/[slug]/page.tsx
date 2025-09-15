@@ -119,7 +119,6 @@ export default async function SketchPage({ params }: SketchPageProps) {
         <Footer 
           title="Studio Youkai"
           description="Creating art that speaks to the soul. Every sketch tells a story, every illustration captures a moment."
-          variant="light"
         />
       </main>
     )

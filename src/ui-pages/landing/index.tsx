@@ -28,7 +28,6 @@ export default function Landing() {
         description="Creating art that speaks to the soul. Every sketch tells a story, every illustration captures a moment."
         links={socialLinks}
         copyright="© 2025 Studio Youkai. All rights reserved."
-        variant="dark"
       />
     </main>
   )

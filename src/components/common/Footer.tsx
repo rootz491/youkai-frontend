@@ -12,7 +12,6 @@ interface FooterProps {
   description?: string
   links?: FooterLink[]
   copyright?: string
-  variant?: 'light' | 'dark'
 }
 
 const defaultLinks: FooterLink[] = [
@@ -23,29 +22,19 @@ const defaultLinks: FooterLink[] = [
 ]
 
 export default function Footer({ 
-  title = 'Youkai Art Gallery',
-  description = 'Exploring creativity through digital art and sketches. Each piece tells a unique story.',
+  title = 'Studio Youkai',
+  description = 'Creating art that speaks to the soul. Every sketch tells a story, every illustration captures a moment.',
   links = defaultLinks,
-  copyright = '© 2025 Youkai Art Gallery. All rights reserved.',
-  variant = 'light'
+  copyright = '© 2025 Studio Youkai. All rights reserved.'
 }: FooterProps) {
-  const isDark = variant === 'dark'
-  
   return (
-    <footer className={`border-t mt-16 py-12 ${
-      isDark 
-        ? 'bg-gray-900 border-gray-800 text-white' 
-        : 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-300'
-    }`}>
+    <footer className="bg-gray-900 border-t border-gray-800 text-white mt-16 py-12">
       <Container>
         <div className="text-center">
           <Heading 
             level={3} 
-            variant={isDark ? 'primary' : 'primary'}
             align="center" 
-            className={`mb-4 studio-youkai-title text-2xl ${
-              isDark ? 'text-white' : ''
-            }`}
+            className="mb-4 studio-youkai-title text-2xl text-white"
           >
             {title}
           </Heading>
@@ -53,9 +42,7 @@ export default function Footer({
           <Text 
             variant="muted" 
             align="center" 
-            className={`mb-6 max-w-md mx-auto ${
-              isDark ? 'text-gray-400' : ''
-            }`}
+            className="mb-6 max-w-md mx-auto text-gray-400"
           >
             {description}
           </Text>
@@ -65,26 +52,18 @@ export default function Footer({
               <a 
                 key={link.href}
                 href={link.href}
-                className={`transition-colors ${
-                  isDark 
-                    ? 'text-gray-400 hover:text-white' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className="text-gray-400 hover:text-white transition-colors"
               >
                 {link.label}
               </a>
             ))}
           </div>
           
-          <div className={`pt-8 border-t ${
-            isDark ? 'border-gray-800' : 'border-gray-300'
-          }`}>
+          <div className="pt-8 border-t border-gray-800">
             <Text 
               variant="muted" 
               align="center"
-              className={`text-sm ${
-                isDark ? 'text-gray-500' : ''
-              }`}
+              className="text-sm text-gray-500"
             >
               {copyright}
             </Text>
