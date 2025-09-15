@@ -1,5 +1,6 @@
 import { createClient } from 'next-sanity'
 import imageUrlBuilder from '@sanity/image-url'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '4ggmuz20'
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
@@ -25,7 +26,7 @@ if (typeof window !== 'undefined') {
 
 const builder = imageUrlBuilder(client)
 
-export const urlFor = (source: any) => builder.image(source)
+export const urlFor = (source: SanityImageSource) => builder.image(source)
 
 // Test connection function
 export const testConnection = async () => {
