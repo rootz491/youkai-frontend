@@ -5,7 +5,6 @@ import SimpleDataTest from '@/components/SimpleDataTest'
 export default function Home() {
   return (
     <main>
-      {/* Hero Section */}
       <div className="hero min-h-[50vh] bg-base-200">
         <div className="hero-content text-center">
           <div className="max-w-md">
@@ -16,14 +15,12 @@ export default function Home() {
           </div>
         </div>
       </div>
-      
-      {/* Debug Components */}
+
       <div className="container mx-auto px-4 py-4 space-y-4">
         <SanityConnectionTest />
         <SimpleDataTest />
       </div>
-      
-      {/* Gallery Section */}
+
       <SketchGallery />
     </main>
   )
