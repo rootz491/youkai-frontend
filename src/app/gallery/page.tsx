@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import GalleryPage from '@/pages/gallery'
+import GalleryPage from '@/ui-pages/gallery'
 
 export const metadata: Metadata = {
   title: 'Art Gallery - Studio Youkai | Browse Complete Artwork Collection',

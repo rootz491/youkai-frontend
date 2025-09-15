@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Landing from '@/pages/landing'
+import Landing from '@/ui-pages/landing'
 
 export const metadata: Metadata = {
   title: 'Studio Youkai - Artistic Journey & Sketch Portfolio',
