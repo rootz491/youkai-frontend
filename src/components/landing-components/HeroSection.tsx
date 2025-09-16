@@ -44,18 +44,18 @@ export function HeroSection({
           </Text>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 sm:px-0">
           <LinkButton 
             href={primaryButtonHref}
             variant="primary"
-            className="px-8 py-4 rounded-full text-lg font-medium"
+            className="px-8 py-4 rounded-full text-lg font-medium text-center justify-center w-full sm:w-auto"
           >
             {primaryButtonText}
           </LinkButton>
           
           <Button 
             variant="outline"
-            className="px-8 py-4 rounded-full border-2 text-lg font-medium"
+            className="px-8 py-4 rounded-full border-2 text-lg font-medium text-center justify-center w-full sm:w-auto"
             onClick={onSecondaryButtonClick}
           >
             {secondaryButtonText}

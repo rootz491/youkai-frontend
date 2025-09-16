@@ -25,7 +25,7 @@ export default function LinkButton({
     <Link 
       href={href}
       className={cn(
-        'inline-flex items-center transition-colors',
+        'inline-flex items-center justify-center transition-colors',
         variants[variant],
         className
       )}
