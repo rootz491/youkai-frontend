@@ -11,19 +11,19 @@ interface SocialLink {
 const socialLinks: SocialLink[] = [
   {
     name: 'Instagram',
-    url: 'https://instagram.com/studio_youkai',
+    url: 'https://www.instagram.com/youkai_arts_',
     icon: '📷',
     color: 'hover:text-pink-500'
   },
   {
     name: 'Telegram',
-    url: 'https://t.me/studio_youkai',
+    url: 'https://t.me/youkai2004--',
     icon: '✈️',
     color: 'hover:text-blue-500'
   },
   {
     name: 'Discord',
-    url: 'https://discord.gg/studio_youkai',
+    url: 'https://discord.gg/grYEXm4qJp',
     icon: '🎮',
     color: 'hover:text-indigo-500'
   }
