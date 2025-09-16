@@ -87,8 +87,8 @@ const Masonry: React.FC<MasonryProps> = ({
   onItemClick
 }) => {
   const columns = useMedia(
-    ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'],
-    [5, 4, 3, 2],
+    ['(min-width:1200px)', '(min-width:768px)', '(min-width:480px)'],
+    [3, 3, 2],
     1
   );
 
