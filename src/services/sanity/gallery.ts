@@ -1,4 +1,4 @@
-import { client, urlFor } from '@/lib/sanity'
+import { client, serverClient, urlFor } from '@/lib/sanity'
 import { Sketch } from '@/types/sketch'
 
 // Configuration - easily changeable pagination limit
@@ -49,10 +49,13 @@ export interface GalleryDataResponse {
 
 /**
  * Fetch initial gallery data from Sanity
+ * Uses server client for ISR when running on server, regular client for browser
  */
 export async function fetchInitialGalleryData(): Promise<GalleryDataResponse> {
   try {
-    const data = await client.fetch(getInitialSketchesQuery())
+    // Use server client for ISR if running on server, regular client for browser
+    const sanityClient = typeof window === 'undefined' ? serverClient : client
+    const data = await sanityClient.fetch(getInitialSketchesQuery())
     
     if (data && data.length > 0) {
       const masonryItems = convertSketchesToMasonryItems(data, 'initial')

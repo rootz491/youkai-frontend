@@ -1,5 +1,9 @@
 import type { Metadata } from 'next'
 import GalleryPage from '@/ui-pages/gallery'
+import { fetchInitialGalleryData } from '@/services/sanity/gallery'
+
+// Enable ISR with 60 seconds revalidation
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Art Gallery - Studio Youkai | Browse Complete Artwork Collection',
@@ -62,6 +66,21 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Gallery() {
-  return <GalleryPage />
+export default async function Gallery() {
+  // Fetch initial data at build time and during revalidation
+  let initialData
+  
+  try {
+    initialData = await fetchInitialGalleryData()
+  } catch (error) {
+    console.error('ISR Gallery: Failed to fetch initial data:', error)
+    // Provide fallback data structure
+    initialData = {
+      sketches: [],
+      masonryItems: [],
+      hasMore: false
+    }
+  }
+  
+  return <GalleryPage initialData={initialData} />
 }

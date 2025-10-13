@@ -6,7 +6,8 @@ import {
   fetchInitialGalleryData, 
   fetchMoreGalleryData,
   type MasonryItem,
-  type Sketch 
+  type Sketch,
+  type GalleryDataResponse 
 } from '@/services/sanity'
 import { PageWrapper, Container } from '@/components/ui/Layout'
 import { LoadingState, ErrorState, EmptyState } from '@/components/ui/States'
@@ -14,17 +15,17 @@ import { GalleryHeader, GalleryContent } from '@/components/gallery-components'
 import { SketchModal } from '@/components/gallery-components/SketchModal'
 import Footer from '@/components/common/Footer'
 
-function GalleryPageContent() {
+function GalleryPageContent({ initialData }: { initialData?: GalleryDataResponse }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const selectedSketch = searchParams.get('sketch')
   
-  const [sketches, setSketches] = useState<Sketch[]>([])
-  const [allItems, setAllItems] = useState<MasonryItem[]>([])
-  const [loading, setLoading] = useState(true)
+  const [sketches, setSketches] = useState<Sketch[]>(initialData?.sketches || [])
+  const [allItems, setAllItems] = useState<MasonryItem[]>(initialData?.masonryItems || [])
+  const [loading, setLoading] = useState(!initialData)
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(initialData?.hasMore ?? true)
 
   const stateRef = useRef({ loadingMore: false, hasMore: true, sketches: [] as Sketch[] })
 
@@ -45,6 +46,11 @@ function GalleryPageContent() {
   }, [router])
 
   const loadInitialData = useCallback(async () => {
+    // Skip if we already have initial data from ISR
+    if (initialData && initialData.sketches.length > 0) {
+      return
+    }
+    
     try {
       setLoading(true)
       setError(null)
@@ -63,7 +69,7 @@ function GalleryPageContent() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [initialData])
 
   const loadMoreData = useCallback(async () => {
     const currentState = stateRef.current
@@ -215,7 +221,7 @@ function GalleryPageContent() {
   )
 }
 
-export default function GalleryPage() {
+export default function GalleryPage({ initialData }: { initialData?: GalleryDataResponse }) {
   return (
     <Suspense fallback={
       <PageWrapper>
@@ -225,7 +231,7 @@ export default function GalleryPage() {
         <Footer />
       </PageWrapper>
     }>
-      <GalleryPageContent />
+      <GalleryPageContent initialData={initialData} />
     </Suspense>
   )
 }
