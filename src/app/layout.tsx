@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
+import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const inter = Inter({ 
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://youkai-frontend.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   category: 'art',
 }
 
