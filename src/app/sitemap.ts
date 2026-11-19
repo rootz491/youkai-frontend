@@ -1,15 +1,16 @@
 import { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://youkai-frontend.vercel.app',
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: 'https://youkai-frontend.vercel.app/gallery',
+      url: `${SITE_URL}/gallery`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,

@@ -22,7 +22,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://youkai-frontend.vercel.app'),
   alternates: {
     canonical: '/',
   },
